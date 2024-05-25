@@ -20,10 +20,6 @@ export namespace Components {
     }
     interface BoceMyAppointments {
     }
-    interface BocePatientData {
-    }
-    interface BocePatientSearch {
-    }
     interface BocePlannedAppointments {
     }
     interface BoceReserveAppointment {
@@ -31,10 +27,6 @@ export namespace Components {
     interface BoceWacProjectApp {
         "basePath": string;
     }
-}
-export interface BocePatientDataCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLBocePatientDataElement;
 }
 declare global {
     interface HTMLBoceAppointmentDataElement extends Components.BoceAppointmentData, HTMLStencilElement {
@@ -73,31 +65,6 @@ declare global {
         prototype: HTMLBoceMyAppointmentsElement;
         new (): HTMLBoceMyAppointmentsElement;
     };
-    interface HTMLBocePatientDataElementEventMap {
-        "entry-clicked": string;
-        "logout-clicked": string;
-        "list-clicked": string;
-    }
-    interface HTMLBocePatientDataElement extends Components.BocePatientData, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLBocePatientDataElementEventMap>(type: K, listener: (this: HTMLBocePatientDataElement, ev: BocePatientDataCustomEvent<HTMLBocePatientDataElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLBocePatientDataElementEventMap>(type: K, listener: (this: HTMLBocePatientDataElement, ev: BocePatientDataCustomEvent<HTMLBocePatientDataElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLBocePatientDataElement: {
-        prototype: HTMLBocePatientDataElement;
-        new (): HTMLBocePatientDataElement;
-    };
-    interface HTMLBocePatientSearchElement extends Components.BocePatientSearch, HTMLStencilElement {
-    }
-    var HTMLBocePatientSearchElement: {
-        prototype: HTMLBocePatientSearchElement;
-        new (): HTMLBocePatientSearchElement;
-    };
     interface HTMLBocePlannedAppointmentsElement extends Components.BocePlannedAppointments, HTMLStencilElement {
     }
     var HTMLBocePlannedAppointmentsElement: {
@@ -123,8 +90,6 @@ declare global {
         "boce-doctor-patients-list": HTMLBoceDoctorPatientsListElement;
         "boce-login": HTMLBoceLoginElement;
         "boce-my-appointments": HTMLBoceMyAppointmentsElement;
-        "boce-patient-data": HTMLBocePatientDataElement;
-        "boce-patient-search": HTMLBocePatientSearchElement;
         "boce-planned-appointments": HTMLBocePlannedAppointmentsElement;
         "boce-reserve-appointment": HTMLBoceReserveAppointmentElement;
         "boce-wac-project-app": HTMLBoceWacProjectAppElement;
@@ -145,13 +110,6 @@ declare namespace LocalJSX {
     }
     interface BoceMyAppointments {
     }
-    interface BocePatientData {
-        "onEntry-clicked"?: (event: BocePatientDataCustomEvent<string>) => void;
-        "onList-clicked"?: (event: BocePatientDataCustomEvent<string>) => void;
-        "onLogout-clicked"?: (event: BocePatientDataCustomEvent<string>) => void;
-    }
-    interface BocePatientSearch {
-    }
     interface BocePlannedAppointments {
     }
     interface BoceReserveAppointment {
@@ -166,8 +124,6 @@ declare namespace LocalJSX {
         "boce-doctor-patients-list": BoceDoctorPatientsList;
         "boce-login": BoceLogin;
         "boce-my-appointments": BoceMyAppointments;
-        "boce-patient-data": BocePatientData;
-        "boce-patient-search": BocePatientSearch;
         "boce-planned-appointments": BocePlannedAppointments;
         "boce-reserve-appointment": BoceReserveAppointment;
         "boce-wac-project-app": BoceWacProjectApp;
@@ -183,8 +139,6 @@ declare module "@stencil/core" {
             "boce-doctor-patients-list": LocalJSX.BoceDoctorPatientsList & JSXBase.HTMLAttributes<HTMLBoceDoctorPatientsListElement>;
             "boce-login": LocalJSX.BoceLogin & JSXBase.HTMLAttributes<HTMLBoceLoginElement>;
             "boce-my-appointments": LocalJSX.BoceMyAppointments & JSXBase.HTMLAttributes<HTMLBoceMyAppointmentsElement>;
-            "boce-patient-data": LocalJSX.BocePatientData & JSXBase.HTMLAttributes<HTMLBocePatientDataElement>;
-            "boce-patient-search": LocalJSX.BocePatientSearch & JSXBase.HTMLAttributes<HTMLBocePatientSearchElement>;
             "boce-planned-appointments": LocalJSX.BocePlannedAppointments & JSXBase.HTMLAttributes<HTMLBocePlannedAppointmentsElement>;
             "boce-reserve-appointment": LocalJSX.BoceReserveAppointment & JSXBase.HTMLAttributes<HTMLBoceReserveAppointmentElement>;
             "boce-wac-project-app": LocalJSX.BoceWacProjectApp & JSXBase.HTMLAttributes<HTMLBoceWacProjectAppElement>;
