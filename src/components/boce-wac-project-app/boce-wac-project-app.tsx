@@ -1,6 +1,6 @@
-import { Component, Host, Prop, State, h } from '@stencil/core';
+//import { Component, Host, Prop, State, h } from '@stencil/core';
 
-declare global {
+/*declare global {
   interface Window { navigation: any; }
 }
 
@@ -139,4 +139,4 @@ export class BoceWacProjectApp {
     );
   }
 
-}
+}*/

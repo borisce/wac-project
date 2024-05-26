@@ -82,28 +82,37 @@ export class BoceReserveAppointment {
     });
   }
 
+  private handleLogout(event: Event) {
+    event.preventDefault();
+    this.isLoggedOut = true;
+  }
+
+  private handleReserve(event: Event) {
+    event.preventDefault();
+    this.isReserved = true;
+  }
+
+  private handleClose(event: Event) {
+    event.preventDefault();
+    this.isClosed = true;
+  }
+
   render() {
     if (this.isLoggedOut) {
       return (
-        <Host>
           <boce-login></boce-login>
-        </Host>
       );
     }
   
     if (this.isReserved) {
       return (
-        <Host>
           <boce-my-appointments></boce-my-appointments>
-        </Host>
       );
     }
   
     if (this.isClosed) {
       return (
-        <Host>
           <boce-my-appointments></boce-my-appointments>
-        </Host>
       );
     }
   
@@ -111,7 +120,7 @@ export class BoceReserveAppointment {
       <Host>
         <div class="component-body">
           <header>
-            <md-elevated-button onClick={() => this.isLoggedOut = true}>Odhlásiť sa</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleLogout(event)}>Odhlásiť sa</md-elevated-button>
           </header>
           <h1>Objednanie sa na vyšetrenie</h1>
           <div class="filterflex">
@@ -129,14 +138,14 @@ export class BoceReserveAppointment {
                 <div slot="supporting-text">{"Termín vyšetrenia:" + this.formatDate(new Date(patient.date)) + " čas: " + patient.estimatedStart + " - " + patient.estimatedEnd}</div>
                 <input slot='end' type="text" placeholder='Zadajte meno a priezvisko' onInput={(event) => this.handleNameInput(event, index)} />
                 <input slot='end' type="text" placeholder='Zadajte dôvod vyšetrenia' onInput={(event) => this.handleReasonInput(event, index)} />
-                <md-elevated-button slot="end" disabled={!this.nameInput[index] || !this.reasonInput[index]} onClick={() => this.isReserved = true}>Rezervuj vyšetrenie</md-elevated-button>
+                <md-elevated-button slot="end" disabled={!this.nameInput[index] || !this.reasonInput[index]} onClick={(event) => this.handleReserve(event)}>Rezervuj vyšetrenie</md-elevated-button>
               </md-list-item>
             )}
           </md-list>
         )}
           
           <div class="back-flex">
-            <md-elevated-button onClick={() => this.isClosed = true}>Späť</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleClose(event)}>Späť</md-elevated-button>
           </div>
         </div>
       </Host>

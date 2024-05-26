@@ -24,9 +24,6 @@ export namespace Components {
     }
     interface BoceReserveAppointment {
     }
-    interface BoceWacProjectApp {
-        "basePath": string;
-    }
 }
 declare global {
     interface HTMLBoceAppointmentDataElement extends Components.BoceAppointmentData, HTMLStencilElement {
@@ -77,12 +74,6 @@ declare global {
         prototype: HTMLBoceReserveAppointmentElement;
         new (): HTMLBoceReserveAppointmentElement;
     };
-    interface HTMLBoceWacProjectAppElement extends Components.BoceWacProjectApp, HTMLStencilElement {
-    }
-    var HTMLBoceWacProjectAppElement: {
-        prototype: HTMLBoceWacProjectAppElement;
-        new (): HTMLBoceWacProjectAppElement;
-    };
     interface HTMLElementTagNameMap {
         "boce-appointment-data": HTMLBoceAppointmentDataElement;
         "boce-create-patient": HTMLBoceCreatePatientElement;
@@ -92,7 +83,6 @@ declare global {
         "boce-my-appointments": HTMLBoceMyAppointmentsElement;
         "boce-planned-appointments": HTMLBocePlannedAppointmentsElement;
         "boce-reserve-appointment": HTMLBoceReserveAppointmentElement;
-        "boce-wac-project-app": HTMLBoceWacProjectAppElement;
     }
 }
 declare namespace LocalJSX {
@@ -114,9 +104,6 @@ declare namespace LocalJSX {
     }
     interface BoceReserveAppointment {
     }
-    interface BoceWacProjectApp {
-        "basePath"?: string;
-    }
     interface IntrinsicElements {
         "boce-appointment-data": BoceAppointmentData;
         "boce-create-patient": BoceCreatePatient;
@@ -126,7 +113,6 @@ declare namespace LocalJSX {
         "boce-my-appointments": BoceMyAppointments;
         "boce-planned-appointments": BocePlannedAppointments;
         "boce-reserve-appointment": BoceReserveAppointment;
-        "boce-wac-project-app": BoceWacProjectApp;
     }
 }
 export { LocalJSX as JSX };
@@ -141,7 +127,6 @@ declare module "@stencil/core" {
             "boce-my-appointments": LocalJSX.BoceMyAppointments & JSXBase.HTMLAttributes<HTMLBoceMyAppointmentsElement>;
             "boce-planned-appointments": LocalJSX.BocePlannedAppointments & JSXBase.HTMLAttributes<HTMLBocePlannedAppointmentsElement>;
             "boce-reserve-appointment": LocalJSX.BoceReserveAppointment & JSXBase.HTMLAttributes<HTMLBoceReserveAppointmentElement>;
-            "boce-wac-project-app": LocalJSX.BoceWacProjectApp & JSXBase.HTMLAttributes<HTMLBoceWacProjectAppElement>;
         }
     }
 }

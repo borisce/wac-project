@@ -1,4 +1,4 @@
-class PolyNavigationDestination {
+/*class PolyNavigationDestination {
     constructor(url: string) {
         this.url = url;
     }
@@ -89,4 +89,4 @@ declare global {
              }
          }
      }
-  }
+  }*/

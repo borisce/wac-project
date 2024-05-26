@@ -12,6 +12,21 @@ export class BoceAppointmentData {
   @State() isLoggedOut: boolean = false;
   @State() isAppointmentChanged: boolean = false;
 
+  private handleLogout(event: Event) {
+    event.preventDefault();
+    this.isLoggedOut = true;
+  }
+
+  private handleClose(event: Event) {
+    event.preventDefault();
+    this.isEditorClosed = true;
+  }
+
+  private handleSave(event: Event) {
+    event.preventDefault();
+    this.isAppointmentChanged = true;
+  }
+
   render() {
     if (this.isLoggedOut) {
       return (
@@ -41,7 +56,7 @@ export class BoceAppointmentData {
       <Host>
         <div class="component-body">
           <header>
-            <md-elevated-button onClick={() => this.isLoggedOut = true}>Odhlásiť sa</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleLogout(event)}>Odhlásiť sa</md-elevated-button>
           </header>
           <h1>Záznam o vyšetrení</h1>
           <div class="data-flex">
@@ -54,8 +69,8 @@ export class BoceAppointmentData {
             <textarea name="appointment_data" id="appointment_data_textarea" value={this.patient.doctorNote}></textarea>
           </div>
           <div class="buttons-flex">
-            <md-elevated-button onClick={() => this.isEditorClosed = true}>Zrušiť</md-elevated-button>
-            <md-elevated-button onClick={() => this.isAppointmentChanged = true}>Uložiť</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleClose(event)}>Zrušiť</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleSave(event)}>Uložiť</md-elevated-button>
           </div>
         </div>
       </Host>

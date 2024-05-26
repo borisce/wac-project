@@ -76,41 +76,49 @@ export class BoceDoctorPatientsList {
     });
   }
 
-  private handleEditClick(index: number) {
+  private handleEditClick(event: Event, index: number) {
+    event.preventDefault();
     this.editingEntryIndex = index;
     this.selectedPatient = this.filteredPatients[index];
+  }
+
+  private handleCreatePatient(event: Event) {
+    event.preventDefault();
+    this.isCreatingPatient = true;
+  }
+
+  private handleLogout(event: Event) {
+    event.preventDefault();
+    this.isLoggedOut = true;
+  }
+
+  private handleCreateTerm(event: Event) {
+    event.preventDefault();
+    this.isCreatingTerm = true;
   }
 
   render() {
     if (this.isLoggedOut) {
       return (
-        <Host>
           <boce-login></boce-login>
-        </Host>
       );
     }
 
     if (this.isCreatingPatient) {
       return (
-        <Host>
           <boce-create-patient></boce-create-patient>
-        </Host>
       );
     }
 
     if (this.isCreatingTerm) {
       return (
-        <Host>
           <boce-create-term></boce-create-term>
-        </Host>
       );
     }
 
     if (this.editingEntryIndex !== null) {
       return (
-        <Host>
           <boce-appointment-data patient={this.selectedPatient}></boce-appointment-data>
-        </Host>
       );
     }
 
@@ -118,8 +126,8 @@ export class BoceDoctorPatientsList {
       <Host>
         <div class="component-body">
           <header>
-            <md-elevated-button onClick={() => this.isCreatingPatient = true}>Vytvor celý záznam o vyšetrení pacienta</md-elevated-button>
-            <md-elevated-button onClick={() => this.isLoggedOut = true}>Odhlásiť sa</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleCreatePatient(event)}>Vytvor celý záznam o vyšetrení pacienta</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleLogout(event)}>Odhlásiť sa</md-elevated-button>
           </header>
           <h1>Zoznam vykonaných a plánovaných vyšetrení</h1>
           <div class="filterflex">
@@ -145,12 +153,12 @@ export class BoceDoctorPatientsList {
                 <div slot='supporting-text'>{"Dôvod vyšetrenia: " + patient.condition}</div>
                 <div slot="supporting-text">{"Záznam o vykonanom vyšetrení: " + patient.doctorNote}</div>
                 <md-icon slot="start">person</md-icon>
-                <md-elevated-button slot="end" onClick={() => this.handleEditClick(index)}>Uprav záznam o vyšetrení</md-elevated-button>
+                <md-elevated-button slot="end" onClick={(event) => this.handleEditClick(event, index)}>Uprav záznam o vyšetrení</md-elevated-button>
               </md-list-item>
             )}
           </md-list>
           <div class="add-term">
-            <md-elevated-button onClick={() => this.isCreatingTerm = true}>Pridaj nový termín vyšetrenia</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleCreateTerm(event)}>Pridaj nový termín vyšetrenia</md-elevated-button>
           </div>
         </div>
       </Host>

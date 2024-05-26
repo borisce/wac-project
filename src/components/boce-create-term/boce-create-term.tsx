@@ -10,35 +10,44 @@ export class BoceCreateTerm {
   @State() isCreateTermClosed: boolean = false;
   @State() isLoggedOut: boolean = false;
 
+  private handleLogout(event: Event) {
+    event.preventDefault();
+    this.isLoggedOut = true;
+  }
+
+  private handleClose(event: Event) {
+    event.preventDefault();
+    this.isCreateTermClosed = true;
+  }
+
+  private handleCreateTerm(event: Event) {
+    event.preventDefault();
+    this.isTermCreated = true;
+  }
+
   render() {
     if (this.isLoggedOut) {
       return (
-        <Host>
-          {<boce-login></boce-login>}
-        </Host>
+        <boce-login></boce-login>
       );
     }
 
     if (this.isCreateTermClosed) {
       return (
-        <Host>
-          {<boce-doctor-patients-list></boce-doctor-patients-list>}
-        </Host>
+        <boce-doctor-patients-list></boce-doctor-patients-list>
       );
     }
 
     if (this.isTermCreated) {
       return (
-        <Host>
-          {<boce-doctor-patients-list></boce-doctor-patients-list>}
-        </Host>
+        <boce-doctor-patients-list></boce-doctor-patients-list>
       );
     }
 
     return (
       <Host>
         <header>
-          <md-elevated-button onClick={() => this.isLoggedOut = true}>Odhlásiť sa</md-elevated-button>
+          <md-elevated-button onClick={(event) => this.handleLogout(event)}>Odhlásiť sa</md-elevated-button>
         </header>
         <h1>Vytvorenie nového voľného termínu vyšetrenia</h1>
         <form action="#">
@@ -50,8 +59,8 @@ export class BoceCreateTerm {
             <label htmlFor="endtime">Čas ukončenia vyšetrenia</label>
             <input type="time" id="endtime" />
             <div class="button-flex">
-              <md-elevated-button onClick={() => this.isCreateTermClosed = true}>Zrušiť</md-elevated-button>
-              <md-elevated-button onClick={() => this.isTermCreated = true}>Vytvoriť voľný termín</md-elevated-button>
+              <md-elevated-button onClick={(event) => this.handleClose(event)}>Zrušiť</md-elevated-button>
+              <md-elevated-button onClick={(event) => this.handleCreateTerm(event)}>Vytvoriť voľný termín</md-elevated-button>
             </div>
           </div>
         </form>

@@ -75,6 +75,21 @@ export class BoceMyAppointments {
     });
   }
 
+  private handleLogout(event: Event) {
+    event.preventDefault();
+    this.isLoggedOut = true;
+  }
+
+  private handlePlannedClick(event: Event) {
+    event.preventDefault();
+    this.isPlannedClicked = true;
+  }
+
+  private handleAvailableClick(event: Event) {
+    event.preventDefault();
+    this.isAvailableClicked = true;
+  }
+
   render() {
     if (this.isLoggedOut) {
       return (
@@ -104,7 +119,7 @@ export class BoceMyAppointments {
       <Host>
         <div class="component-body">
           <header>
-            <md-elevated-button onClick={() => this.isLoggedOut = true}>Odhlásiť sa</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleLogout(event)}>Odhlásiť sa</md-elevated-button>
           </header>
           <h1>História mojich vyšetrení</h1>
           <div class="filterflex">
@@ -121,7 +136,7 @@ export class BoceMyAppointments {
               <p class='headerinline'>Vyberte deň:</p>
               <input type="date" id="Test_DatetimeLocal" value={this.searchDate} onInput={(event) => this.handleDateChange(event)} />
             </div>
-            <md-elevated-button onClick={() => this.isPlannedClicked = true}>Zobraz plánované vyšetrenia</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handlePlannedClick(event)}>Zobraz plánované vyšetrenia</md-elevated-button>
           </div>
           <md-list class="patient-list">
             {this.searchQuery.trim() === '' ? (
@@ -141,7 +156,7 @@ export class BoceMyAppointments {
             )}
           </md-list>
           <div class="add-term">
-            <md-elevated-button onClick={() => this.isAvailableClicked = true}>Objednanie sa na termín vyšetrenia</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleAvailableClick(event)}>Objednanie sa na termín vyšetrenia</md-elevated-button>
           </div>
         </div>
       </Host>

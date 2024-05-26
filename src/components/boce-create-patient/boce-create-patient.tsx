@@ -13,35 +13,44 @@ export class BoceCreatePatient {
   @State() isPatientCreated: boolean = false;
   @State() isLoggedOut: boolean = false;
 
+  private handleLogout(event: Event) {
+    event.preventDefault();
+    this.isLoggedOut = true;
+  }
+
+  private handleClose(event: Event) {
+    event.preventDefault();
+    this.isCreateClosed = true;
+  }
+
+  private handleCreatePatient(event: Event) {
+    event.preventDefault();
+    this.isPatientCreated = true;
+  }
+
   render() {
     if (this.isLoggedOut) {
       return (
-        <Host>
-          {<boce-login></boce-login>}
-        </Host>
+        <boce-login></boce-login>
       );
     }
 
     if (this.isCreateClosed) {
       return (
-        <Host>
-          {<boce-doctor-patients-list></boce-doctor-patients-list>}
-        </Host>
+        <boce-doctor-patients-list></boce-doctor-patients-list>
       );
     }
 
     if (this.isPatientCreated) {
       return (
-        <Host>
-          {<boce-doctor-patients-list></boce-doctor-patients-list>}
-        </Host>
+        <boce-doctor-patients-list></boce-doctor-patients-list>
       );
     }
 
     return (
       <Host>
         <header>
-          <md-elevated-button onClick={() => this.isLoggedOut = true}>Odhlásiť sa</md-elevated-button>
+          <md-elevated-button onClick={(event) => this.handleLogout(event)}>Odhlásiť sa</md-elevated-button>
         </header>
         <h1>Vytvorenie celého záznamu vyšetrenia pacienta</h1>
         <form action="#">
@@ -61,8 +70,8 @@ export class BoceCreatePatient {
             <label htmlFor="note">Záznam lekára o vykonanom vyšetrení</label>
             <input type="text" placeholder='heslo' id="note" />
             <div class="button-flex">
-              <md-elevated-button onClick={() => this.isCreateClosed = true}>Zrušiť</md-elevated-button>
-              <md-elevated-button onClick={() => this.isPatientCreated = true}>Vytvoriť záznam o vyšetrení</md-elevated-button>
+              <md-elevated-button onClick={(event) => this.handleClose(event)}>Zrušiť</md-elevated-button>
+              <md-elevated-button onClick={(event) => this.handleCreatePatient(event)}>Vytvoriť záznam o vyšetrení</md-elevated-button>
             </div>
           </div>  
         </form>

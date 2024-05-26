@@ -70,29 +70,38 @@ export class BocePlannedAppointments {
     });
   }
 
+  private handleLogout(event: Event) {
+    event.preventDefault();
+    this.isLoggedOut = true;
+  }
+
+  private handleCancel(event: Event) {
+    event.preventDefault();
+    this.isCancelled = true;
+  }
+
+  private handleBack(event: Event) {
+    event.preventDefault();
+    this.isBack = true;
+  }
+
 
   render() {
     if (this.isLoggedOut) {
       return (
-        <Host>
           <boce-login></boce-login>
-        </Host>
       );
     }
 
     if (this.isCancelled) {
       return (
-        <Host>
           <boce-my-appointments></boce-my-appointments>
-        </Host>
       );
     }
 
     if (this.isBack) {
       return (
-        <Host>
           <boce-my-appointments></boce-my-appointments>
-        </Host>
       );
     }
 
@@ -100,7 +109,7 @@ export class BocePlannedAppointments {
       <Host>
         <div class="component-body">
           <header>
-            <md-elevated-button onClick={() => this.isLoggedOut = true}>Odhlásiť sa</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleLogout(event)}>Odhlásiť sa</md-elevated-button>
           </header>
           <h1>Moje plánované vyšetrenia</h1>
           <div class="filterflex">
@@ -124,7 +133,7 @@ export class BocePlannedAppointments {
                   <div slot="supporting-text">{"Termín vyšetrenia: " + this.formatDate(new Date(patient.date)) + " čas: " + patient.estimatedStart + " - " + patient.estimatedEnd}</div>
                   <div slot='supporting-text'>{"Dôvod vyšetrenia: " + patient.condition}</div>
                   <div slot="supporting-text">{"Záznam o vykonanom vyšetrení: " + patient.doctorNote}</div>
-                  <md-elevated-button slot="end" onClick={() => this.isCancelled = true}>Zruš vyšetrenie</md-elevated-button>
+                  <md-elevated-button slot="end" onClick={(event) => this.handleCancel(event)}>Zruš vyšetrenie</md-elevated-button>
                   <md-icon slot="start">person</md-icon>
                 </md-list-item>
               )
@@ -133,7 +142,7 @@ export class BocePlannedAppointments {
             )}
           </md-list>
           <div class="add-term">
-            <md-elevated-button onClick={() => this.isBack = true}>Spät na históriu vyšetrení</md-elevated-button>
+            <md-elevated-button onClick={(event) => this.handleBack(event)}>Spät na históriu vyšetrení</md-elevated-button>
           </div>
         </div>
       </Host>
