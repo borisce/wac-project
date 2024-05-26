@@ -138,6 +138,6 @@ export class BoceWacProjectApp {
       </Host>
     );
   }
-  trigger flux
+  trigger flux2
 
 }*/
