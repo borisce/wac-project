@@ -1,4 +1,6 @@
-import { Component, State, Host, h } from '@stencil/core';
+import { Component, State, Host, h, Prop } from '@stencil/core';
+import { AppointmentsListApiFactory, AppointmentsList, Configuration } from '../../api/wac-project';
+
 
 @Component({
   tag: 'boce-planned-appointments',
@@ -11,41 +13,29 @@ export class BocePlannedAppointments {
   @State() isBack: boolean = false;
   @State() searchQuery: string = ''; // State to hold the search query
   @State() filteredPatients: any[] = []; // State to hold the filtered patients
+  @Prop() apiBase: string;
+  @State() errorMessage: string;
 
   waitingPatients: any[];
 
-  private async getWaitingPatientsAsync() {
-    return await Promise.resolve(
-      [{
-        name: 'Jožko Púčik',
-        Id: '1',
-        date: new Date("2024-04-01"),
-        estimatedStart: "11:00",
-        estimatedEnd: "11:20",
-        condition: 'Kontrola',
-        doctorNote: "",
-      }, {
-        name: 'Jožko Púčik',
-        Id: '2',
-        date: new Date("2024-06-01"),
-        estimatedStart: "11:40",
-        estimatedEnd: "12:00",
-        condition: 'Teploty',
-        doctorNote: "",
-      }, {
-        name: 'Ing. Ferdinand Trety',
-        Id: '3',
-        date: new Date("2024-04-03"),
-        estimatedStart: "10:00",
-        estimatedEnd: "10:20",
-        condition: 'Bolesti hrdla',
-        doctorNote: "",
-      }]
-    );
+  private async getAppointmentListAsync() {
+    try {
+      const response = await
+        AppointmentsListApiFactory(undefined, this.apiBase).
+          getAppointmentsList()
+      if (response.status < 299) {
+        return response.data;
+      } else {
+        this.errorMessage = `Cannot retrieve list of appointments: ${response.statusText}`
+      }
+    } catch (err: any) {
+      this.errorMessage = `Cannot retrieve list of appointments: ${err.message || "unknown"}`
+    }
+    return [];
   }
 
   async componentWillLoad() {
-    this.waitingPatients = await this.getWaitingPatientsAsync();
+    this.waitingPatients = await this.getAppointmentListAsync();
     this.filterPatients();
   }
 
@@ -75,9 +65,22 @@ export class BocePlannedAppointments {
     this.isLoggedOut = true;
   }
 
-  private handleCancel(event: Event) {
+  private handleCancel(event: Event, id: string) {
     event.preventDefault();
-    this.isCancelled = true;
+    const config: Configuration = {
+      basePath: this.apiBase,
+      isJsonMime: () => true,
+    };
+    const apiInstance = AppointmentsListApiFactory(config);
+  
+    apiInstance.deleteAppointment(id)
+      .then(() => {
+        // Update state to reflect cancellation
+        this.isCancelled = true;
+      })
+      .catch((error) => {
+        console.error('Error cancelling appointment:', error);
+      });
   }
 
   private handleBack(event: Event) {
@@ -89,19 +92,19 @@ export class BocePlannedAppointments {
   render() {
     if (this.isLoggedOut) {
       return (
-          <boce-login></boce-login>
+          <boce-login api-base={this.apiBase}></boce-login>
       );
     }
 
     if (this.isCancelled) {
       return (
-          <boce-my-appointments></boce-my-appointments>
+          <boce-my-appointments api-base={this.apiBase}></boce-my-appointments>
       );
     }
 
     if (this.isBack) {
       return (
-          <boce-my-appointments></boce-my-appointments>
+          <boce-my-appointments api-base={this.apiBase}></boce-my-appointments>
       );
     }
 
@@ -133,8 +136,7 @@ export class BocePlannedAppointments {
                   <div slot="supporting-text">{"Termín vyšetrenia: " + this.formatDate(new Date(patient.date)) + " čas: " + patient.estimatedStart + " - " + patient.estimatedEnd}</div>
                   <div slot='supporting-text'>{"Dôvod vyšetrenia: " + patient.condition}</div>
                   <div slot="supporting-text">{"Záznam o vykonanom vyšetrení: " + patient.doctorNote}</div>
-                  <md-elevated-button slot="end" onClick={(event) => this.handleCancel(event)}>Zruš vyšetrenie</md-elevated-button>
-                  <md-icon slot="start">person</md-icon>
+                  <md-elevated-button slot="end" onClick={(event) => this.handleCancel(event, patient.id)}>Zruš vyšetrenie</md-elevated-button>                  <md-icon slot="start">person</md-icon>
                 </md-list-item>
               )
             ) : (

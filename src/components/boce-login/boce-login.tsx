@@ -1,4 +1,4 @@
-import {State, Component, Host, h } from '@stencil/core';
+import {State, Component, Host, h, Prop } from '@stencil/core';
 
 @Component({
   tag: 'boce-login',
@@ -8,6 +8,7 @@ import {State, Component, Host, h } from '@stencil/core';
 export class BoceLogin {
   @State() isDoctorLogged: boolean = false;
   @State() isPatientLogged: boolean = false;
+  @Prop() apiBase: string;
 
   private handleDoctorLogin(event: Event) {
     event.preventDefault();
@@ -22,13 +23,13 @@ export class BoceLogin {
   render() {
     if (this.isDoctorLogged) {
       return (
-          <boce-doctor-patients-list></boce-doctor-patients-list>
+          <boce-doctor-patients-list api-base={this.apiBase}></boce-doctor-patients-list>
       );
     }
 
     if (this.isPatientLogged) {
       return (
-          <boce-my-appointments></boce-my-appointments>
+          <boce-my-appointments api-base={this.apiBase}></boce-my-appointments>
       );
     }
 

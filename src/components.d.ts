@@ -7,22 +7,29 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface BoceAppointmentData {
+        "apiBase": string;
         "patient": any;
     }
     interface BoceCreatePatient {
-        "entryId": string;
+        "apiBase": string;
     }
     interface BoceCreateTerm {
+        "apiBase": string;
     }
     interface BoceDoctorPatientsList {
+        "apiBase": string;
     }
     interface BoceLogin {
+        "apiBase": string;
     }
     interface BoceMyAppointments {
+        "apiBase": string;
     }
     interface BocePlannedAppointments {
+        "apiBase": string;
     }
     interface BoceReserveAppointment {
+        "apiBase": string;
     }
 }
 declare global {
@@ -87,22 +94,29 @@ declare global {
 }
 declare namespace LocalJSX {
     interface BoceAppointmentData {
+        "apiBase"?: string;
         "patient"?: any;
     }
     interface BoceCreatePatient {
-        "entryId"?: string;
+        "apiBase"?: string;
     }
     interface BoceCreateTerm {
+        "apiBase"?: string;
     }
     interface BoceDoctorPatientsList {
+        "apiBase"?: string;
     }
     interface BoceLogin {
+        "apiBase"?: string;
     }
     interface BoceMyAppointments {
+        "apiBase"?: string;
     }
     interface BocePlannedAppointments {
+        "apiBase"?: string;
     }
     interface BoceReserveAppointment {
+        "apiBase"?: string;
     }
     interface IntrinsicElements {
         "boce-appointment-data": BoceAppointmentData;

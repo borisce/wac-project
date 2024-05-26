@@ -1,4 +1,6 @@
-import { Component, State, Host, h } from '@stencil/core';
+import { Component, State, Host, h, Prop } from '@stencil/core';
+import { AppointmentsListApiFactory, AppointmentsList, Configuration } from '../../api/wac-project';
+
 
 
 @Component({
@@ -14,42 +16,30 @@ export class BoceReserveAppointment {
   @State() reasonInput: string [] = [];
   @State() filteredPatients: any[] = [];
   @State() searchDate: string = '';
+  @Prop() apiBase: string;
+  @State() errorMessage: string;
 
 
   waitingPatients: any[];
 
-  private async getWaitingPatientsAsync() {
-    return await Promise.resolve(
-        [{
-          name: '',
-          Id: '1',
-          date: new Date("2024-05-30"),
-          estimatedStart: "11:00",
-          estimatedEnd: "11:20",
-          condition: '',
-          doctorNote: "",
-        }, {
-          name: '',
-          Id: '2',
-          date: new Date("2024-06-01"),
-          estimatedStart: "11:40",
-          estimatedEnd: "12:00",
-          condition: '',
-          doctorNote: "",
-        }, {
-          name: '',
-          Id: '3',
-          date: new Date("2024-06-01"),
-          estimatedStart: "10:00",
-          estimatedEnd: "10:20",
-          condition: '',
-          doctorNote: "",
-        }]
-    );
+  private async getAppointmentListAsync() {
+    try {
+      const response = await
+        AppointmentsListApiFactory(undefined, this.apiBase).
+          getAppointmentsList()
+      if (response.status < 299) {
+        return response.data;
+      } else {
+        this.errorMessage = `Cannot retrieve list of appointments: ${response.statusText}`
+      }
+    } catch (err: any) {
+      this.errorMessage = `Cannot retrieve list of appointments: ${err.message || "unknown"}`
+    }
+    return [];
   }
 
   async componentWillLoad() {
-    this.waitingPatients = await this.getWaitingPatientsAsync();
+    this.waitingPatients = await this.getAppointmentListAsync();
     this.filteredPatients = this.waitingPatients;
   }
 
@@ -87,9 +77,35 @@ export class BoceReserveAppointment {
     this.isLoggedOut = true;
   }
 
-  private handleReserve(event: Event) {
+  private handleReserve(event: Event, index: number) {
     event.preventDefault();
-    this.isReserved = true;
+  
+    // Get the input values
+    const name = this.nameInput[index];
+    const reason = this.reasonInput[index];
+  
+    // Update the item in the filteredPatients array
+    const updatedPatient = {
+      ...this.filteredPatients[index],
+      name: name,
+      reason: reason
+    };
+  
+    // Send PUT request to update the item on the server
+    const config: Configuration = {
+      basePath: this.apiBase,
+      isJsonMime: () => true, // Example implementation, adjust as needed
+    };
+    const apiInstance = AppointmentsListApiFactory(config);
+  
+    apiInstance.updateAppointment(updatedPatient.id, updatedPatient)
+      .then(() => {
+        // Update state to reflect reservation
+        this.isReserved = true;
+      })
+      .catch((error) => {
+        console.error('Error updating appointment:', error);
+      });
   }
 
   private handleClose(event: Event) {
@@ -100,19 +116,19 @@ export class BoceReserveAppointment {
   render() {
     if (this.isLoggedOut) {
       return (
-          <boce-login></boce-login>
+          <boce-login api-base={this.apiBase}></boce-login>
       );
     }
   
     if (this.isReserved) {
       return (
-          <boce-my-appointments></boce-my-appointments>
+          <boce-my-appointments api-base={this.apiBase}></boce-my-appointments>
       );
     }
   
     if (this.isClosed) {
       return (
-          <boce-my-appointments></boce-my-appointments>
+          <boce-my-appointments api-base={this.apiBase}></boce-my-appointments>
       );
     }
   
@@ -138,7 +154,8 @@ export class BoceReserveAppointment {
                 <div slot="supporting-text">{"Termín vyšetrenia:" + this.formatDate(new Date(patient.date)) + " čas: " + patient.estimatedStart + " - " + patient.estimatedEnd}</div>
                 <input slot='end' type="text" placeholder='Zadajte meno a priezvisko' onInput={(event) => this.handleNameInput(event, index)} />
                 <input slot='end' type="text" placeholder='Zadajte dôvod vyšetrenia' onInput={(event) => this.handleReasonInput(event, index)} />
-                <md-elevated-button slot="end" disabled={!this.nameInput[index] || !this.reasonInput[index]} onClick={(event) => this.handleReserve(event)}>Rezervuj vyšetrenie</md-elevated-button>
+                <md-elevated-button slot="end" disabled={!this.nameInput[index] || !this.reasonInput[index]} onClick={(event) => this.handleReserve(event, index)}>Rezervuj vyšetrenie</md-elevated-button>
+
               </md-list-item>
             )}
           </md-list>

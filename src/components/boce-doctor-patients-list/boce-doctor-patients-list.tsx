@@ -1,4 +1,5 @@
-import { State, Component, Host, h } from '@stencil/core';
+import { State, Component, Host, h, Prop } from '@stencil/core';
+import { AppointmentsListApiFactory, AppointmentsList } from '../../api/wac-project';
 
 @Component({
   tag: 'boce-doctor-patients-list',
@@ -14,41 +15,29 @@ export class BoceDoctorPatientsList {
   @State() searchDate: string = '';
   @State() filteredPatients: any[] = [];
   @State() selectedPatient: any = null; // State to hold the selected patient
+  @Prop() apiBase: string;
+  @State() errorMessage: string;
 
-  waitingPatients: any[];
+  waitingPatients: AppointmentsList[];
 
-  private async getWaitingPatientsAsync() {
-    return await Promise.resolve(
-      [{
-        name: 'Jožko Púčik',
-        Id: '1',
-        date: new Date("2024-04-01"),
-        estimatedStart: "11:00",
-        estimatedEnd: "11:20",
-        condition: 'Kontrola',
-        doctorNote: "",
-      }, {
-        name: 'Bc. August Cézar',
-        Id: '2',
-        date: new Date("2024-04-01"),
-        estimatedStart: "11:40",
-        estimatedEnd: "12:00",
-        condition: 'Teploty',
-        doctorNote: "",
-      }, {
-        name: 'Ing. Ferdinand Trety',
-        Id: '3',
-        date: new Date("2024-04-03"),
-        estimatedStart: "10:00",
-        estimatedEnd: "10:20",
-        condition: 'Bolesti hrdla',
-        doctorNote: "",
-      }]
-    );
+  private async getAppointmentListAsync() {
+    try {
+      const response = await
+        AppointmentsListApiFactory(undefined, this.apiBase).
+          getAppointmentsList()
+      if (response.status < 299) {
+        return response.data;
+      } else {
+        this.errorMessage = `Cannot retrieve list of appointments: ${response.statusText}`
+      }
+    } catch (err: any) {
+      this.errorMessage = `Cannot retrieve list of appointments: ${err.message || "unknown"}`
+    }
+    return [];
   }
 
   async componentWillLoad() {
-    this.waitingPatients = await this.getWaitingPatientsAsync();
+    this.waitingPatients = await this.getAppointmentListAsync();
     this.filteredPatients = this.waitingPatients;
   }
 
@@ -80,6 +69,7 @@ export class BoceDoctorPatientsList {
     event.preventDefault();
     this.editingEntryIndex = index;
     this.selectedPatient = this.filteredPatients[index];
+    console.log(this.selectedPatient)
   }
 
   private handleCreatePatient(event: Event) {
@@ -100,25 +90,25 @@ export class BoceDoctorPatientsList {
   render() {
     if (this.isLoggedOut) {
       return (
-          <boce-login></boce-login>
+          <boce-login api-base={this.apiBase}></boce-login>
       );
     }
 
     if (this.isCreatingPatient) {
       return (
-          <boce-create-patient></boce-create-patient>
+          <boce-create-patient api-base={this.apiBase}></boce-create-patient>
       );
     }
 
     if (this.isCreatingTerm) {
       return (
-          <boce-create-term></boce-create-term>
+          <boce-create-term api-base={this.apiBase}></boce-create-term>
       );
     }
 
     if (this.editingEntryIndex !== null) {
       return (
-          <boce-appointment-data patient={this.selectedPatient}></boce-appointment-data>
+          <boce-appointment-data api-base={this.apiBase} patient={this.selectedPatient}></boce-appointment-data>
       );
     }
 
@@ -145,6 +135,9 @@ export class BoceDoctorPatientsList {
               <input type="date" id="Test_DatetimeLocal" value={this.searchDate} onInput={(event) => this.handleDateChange(event)} />
             </div>
           </div>
+          {this.errorMessage
+        ? <div class="error">{this.errorMessage}</div>
+        :
           <md-list class="patient-list">
             {this.filteredPatients.map((patient, index) =>
               <md-list-item>
@@ -155,8 +148,9 @@ export class BoceDoctorPatientsList {
                 <md-icon slot="start">person</md-icon>
                 <md-elevated-button slot="end" onClick={(event) => this.handleEditClick(event, index)}>Uprav záznam o vyšetrení</md-elevated-button>
               </md-list-item>
-            )}
+            )}   
           </md-list>
+        }  
           <div class="add-term">
             <md-elevated-button onClick={(event) => this.handleCreateTerm(event)}>Pridaj nový termín vyšetrenia</md-elevated-button>
           </div>

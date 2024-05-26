@@ -1,4 +1,6 @@
-import { Component, State, Host, h } from '@stencil/core';
+import { Component, State, Host, h, Prop } from '@stencil/core';
+import { AppointmentsListApiFactory, AppointmentsList } from '../../api/wac-project';
+
 
 @Component({
   tag: 'boce-my-appointments',
@@ -12,41 +14,29 @@ export class BoceMyAppointments {
   @State() searchQuery: string = ''; // State to hold the search query
   @State() searchDate: string = ''; // State to hold the search date
   @State() filteredPatients: any[] = []; // State to hold the filtered patients
+  @Prop() apiBase: string;
+  @State() errorMessage: string;
 
   waitingPatients: any[];
 
-  private async getWaitingPatientsAsync() {
-    return await Promise.resolve(
-      [{
-        name: 'Jožko Púčik',
-        Id: '1',
-        date: new Date("2024-04-01"),
-        estimatedStart: "11:00",
-        estimatedEnd: "11:20",
-        condition: 'Kontrola',
-        doctorNote: "",
-      }, {
-        name: 'Bc. August Cézar',
-        Id: '2',
-        date: new Date("2024-04-01"),
-        estimatedStart: "11:40",
-        estimatedEnd: "12:00",
-        condition: 'Teploty',
-        doctorNote: "",
-      }, {
-        name: 'Ing. Ferdinand Trety',
-        Id: '3',
-        date: new Date("2024-04-03"),
-        estimatedStart: "10:00",
-        estimatedEnd: "10:20",
-        condition: 'Bolesti hrdla',
-        doctorNote: "",
-      }]
-    );
+  private async getAppointmentListAsync() {
+    try {
+      const response = await
+        AppointmentsListApiFactory(undefined, this.apiBase).
+          getAppointmentsList()
+      if (response.status < 299) {
+        return response.data;
+      } else {
+        this.errorMessage = `Cannot retrieve list of appointments: ${response.statusText}`
+      }
+    } catch (err: any) {
+      this.errorMessage = `Cannot retrieve list of appointments: ${err.message || "unknown"}`
+    }
+    return [];
   }
 
   async componentWillLoad() {
-    this.waitingPatients = await this.getWaitingPatientsAsync();
+    this.waitingPatients = await this.getAppointmentListAsync();
   }
 
   private formatDate(date: Date): string {
@@ -94,7 +84,7 @@ export class BoceMyAppointments {
     if (this.isLoggedOut) {
       return (
         <Host>
-          <boce-login></boce-login>
+          <boce-login api-base={this.apiBase}></boce-login>
         </Host>
       );
     }
@@ -102,7 +92,7 @@ export class BoceMyAppointments {
     if (this.isPlannedClicked) {
       return (
         <Host>
-          <boce-planned-appointments></boce-planned-appointments>
+          <boce-planned-appointments api-base={this.apiBase}></boce-planned-appointments>
         </Host>
       );
     }
@@ -110,7 +100,7 @@ export class BoceMyAppointments {
     if (this.isAvailableClicked) {
       return (
         <Host>
-          <boce-reserve-appointment></boce-reserve-appointment>
+          <boce-reserve-appointment api-base={this.apiBase}></boce-reserve-appointment>
         </Host>
       );
     }
