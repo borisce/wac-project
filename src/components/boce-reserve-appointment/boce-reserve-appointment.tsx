@@ -1,5 +1,5 @@
 import { Component, State, Host, h, Prop } from '@stencil/core';
-import { AppointmentsListApiFactory, AppointmentsList, Configuration } from '../../api/wac-project';
+import { AppointmentsListApiFactory, Configuration } from '../../api/wac-project';
 
 
 
